@@ -1,18 +1,46 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Briefcase } from "lucide-react";
 import { siteInfo } from "@/lib/site-info";
 
-export default function Navbar() {
+function readLangCookie(cookieString: string): "pl" | "en" | null {
+  const match = cookieString.match(/(?:^|;\s*)lang-current=([^;]+)/);
+  const value = match?.[1] ? decodeURIComponent(match[1]) : null;
+  return value === "en" || value === "pl" ? value : null;
+}
+
+function useSessionLang(initialLang: "pl" | "en"): "pl" | "en" {
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      window.addEventListener("storage", onStoreChange);
+      window.addEventListener("lang-current", onStoreChange as EventListener);
+      return () => {
+        window.removeEventListener("storage", onStoreChange);
+        window.removeEventListener(
+          "lang-current",
+          onStoreChange as EventListener,
+        );
+      };
+    },
+    () =>
+      (sessionStorage.getItem("lang-current") as "pl" | "en" | null) ??
+      readLangCookie(document.cookie) ??
+      initialLang,
+    () => initialLang,
+  );
+}
+
+export default function Navbar({
+  initialLang = "pl",
+}: {
+  initialLang?: "pl" | "en";
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [lang, setLang] = useState<"pl" | "en">(() => {
-    if (typeof window === "undefined") return "pl";
-    return (sessionStorage.getItem("lang-current") as "pl" | "en") ?? "pl";
-  });
+  const lang = useSessionLang(initialLang);
   useEffect(() => {
     // 1. Kill banner by removing the body top offset Google injects
     const styleObserver = new MutationObserver(() => {
@@ -25,13 +53,7 @@ export default function Navbar() {
       attributeFilter: ["style"],
     });
 
-    const savedLang = sessionStorage.getItem("lang-current") as
-      | "pl"
-      | "en"
-      | null;
-    const targetLang = savedLang ?? "pl";
-
-    if (targetLang === "pl") {
+    if (lang === "pl") {
       const tryAutoSwitch = (attempts = 0) => {
         const select =
           document.querySelector<HTMLSelectElement>(".goog-te-combo");
@@ -39,11 +61,27 @@ export default function Navbar() {
           select.value = "pl";
           select.dispatchEvent(new Event("change"));
           sessionStorage.setItem("lang-current", "pl");
+          window.dispatchEvent(new Event("lang-current"));
         } else if (attempts < 30) {
           setTimeout(() => tryAutoSwitch(attempts + 1), 300);
         }
       };
       tryAutoSwitch();
+    } else {
+      const expire = "expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      document.cookie = `googtrans=; ${expire} path=/;`;
+      document.cookie = `googtrans=; ${expire} path=/; domain=${window.location.hostname};`;
+      const trySwitchBack = (attempts = 0) => {
+        const select =
+          document.querySelector<HTMLSelectElement>(".goog-te-combo");
+        if (select && select.options.length > 1) {
+          select.value = "en";
+          select.dispatchEvent(new Event("change"));
+        } else if (attempts < 15) {
+          setTimeout(() => trySwitchBack(attempts + 1), 200);
+        }
+      };
+      trySwitchBack();
     }
     // Keep scroll handler
     const handler = () => setScrolled(window.scrollY > 20);
@@ -53,18 +91,32 @@ export default function Navbar() {
       styleObserver.disconnect();
       window.removeEventListener("scroll", handler);
     };
-  }, []);
+  }, [lang]);
   const switchLang = (target: "pl" | "en") => {
-    setLang(target);
     sessionStorage.setItem("lang-current", target);
+    document.cookie = `lang-current=${encodeURIComponent(target)}; path=/; max-age=31536000; samesite=lax`;
+    window.dispatchEvent(new Event("lang-current"));
 
     if (target === "en") {
+      const expire = "expires=Thu, 01 Jan 1970 00:00:00 UTC;";
       document.cookie =
-        "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        `googtrans=; ${expire} path=/;`;
       document.cookie =
-        "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" +
-        window.location.hostname;
-      window.location.reload();
+        `googtrans=; ${expire} path=/; domain=${window.location.hostname};`;
+
+      const trySwitchBack = (attempts = 0) => {
+        const select =
+          document.querySelector<HTMLSelectElement>(".goog-te-combo");
+        if (select && select.options.length > 1) {
+          select.value = "en";
+          select.dispatchEvent(new Event("change"));
+        } else if (attempts < 15) {
+          setTimeout(() => trySwitchBack(attempts + 1), 200);
+        } else {
+          window.location.reload();
+        }
+      };
+      trySwitchBack();
     } else {
       const trySwitch = (attempts = 0) => {
         const select =

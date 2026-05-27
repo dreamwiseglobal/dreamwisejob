@@ -5,10 +5,13 @@ import { motion } from "framer-motion";
 import { jobs, jobCategories, type Job } from "@/lib/jobs-data";
 import JobCard from "@/components/landing/JobCard";
 import { Search } from "lucide-react";
+import ApplyDrawer from "@/components/jobs/ApplyDrawer";
 
 export default function JobsSection() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const [activeJob, setActiveJob] = useState<Job | null>(null);
 
   const filtered: Job[] = jobs.filter((job) => {
     const matchesCategory =
@@ -75,7 +78,15 @@ export default function JobsSection() {
         {filtered.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((job, i) => (
-              <JobCard key={job.id} job={job} index={i} />
+              <JobCard
+                key={job.id}
+                job={job}
+                index={i}
+                onApply={(picked) => {
+                  setActiveJob(picked);
+                  setOpen(true);
+                }}
+              />
             ))}
           </div>
         ) : (
@@ -112,6 +123,11 @@ export default function JobsSection() {
           </a>
         </div>
       </div>
+      <ApplyDrawer
+        job={activeJob}
+        open={open}
+        onClose={() => setOpen(false)}
+      />
     </section>
   );
 }
