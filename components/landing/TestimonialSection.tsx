@@ -125,7 +125,7 @@ export default function TestimonialsSection() {
             </div>
             <div className="flex flex-wrap gap-4 shrink-0">
               <Link
-                href="/#jobs"
+                href="/jobs"
                 className="group flex items-center gap-2 bg-white text-[#0F6E56] px-8 py-4 font-semibold text-sm hover:bg-[#E1F5EE] transition-colors duration-200"
               >
                 View All Jobs

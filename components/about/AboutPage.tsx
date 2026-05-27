@@ -105,7 +105,7 @@ export default function AboutPage() {
 
               <div className="mt-10 flex flex-wrap gap-4">
                 <Link
-                  href="/#jobs"
+                  href="/jobs"
                   className="inline-flex items-center gap-2 bg-[#1D9E75] text-white px-7 py-3.5 font-semibold text-sm hover:bg-[#0F6E56] transition-colors duration-200 border-2 border-[#1D9E75] hover:border-[#0F6E56]"
                 >
                   Browse Jobs
@@ -261,7 +261,7 @@ export default function AboutPage() {
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link
-                  href="/#jobs"
+                  href="/jobs"
                   className="inline-flex items-center gap-2 bg-[#185FA5] text-white px-6 py-3 font-semibold text-sm hover:bg-[#1A56DB] transition-colors duration-200"
                 >
                   Start browsing jobs
@@ -281,4 +281,3 @@ export default function AboutPage() {
     </main>
   );
 }
-

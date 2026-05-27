@@ -65,7 +65,7 @@ export default function HeroSection() {
 
             <motion.div {...fadeUp(0.3)} className="flex flex-wrap gap-4 mb-10">
               <Link
-                href="/#jobs"
+                href="/jobs"
                 className="group flex items-center gap-2 bg-[#1D9E75] text-white px-7 py-3.5 font-semibold text-sm hover:bg-[#0F6E56] transition-all duration-200 border-2 border-[#1D9E75] hover:border-[#0F6E56]"
               >
                 Browse Jobs

@@ -130,16 +130,29 @@ function JobCard({ job, onApply }: { job: Job; onApply: (job: Job) => void }) {
       </div>
 
       <div className="p-6 pt-0">
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onApply(job);
-          }}
-          className="w-full flex items-center justify-center gap-2 bg-[#185FA5] text-white py-3 text-sm font-semibold hover:bg-[#1A56DB] transition-colors duration-200"
-        >
-          Apply Now
-        </button>
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/jobs/${job.id}`);
+            }}
+            className="w-full inline-flex items-center justify-center border border-[#185FA5] text-[#185FA5] py-3 text-sm font-semibold hover:bg-[#E6F1FB] transition-colors duration-200"
+          >
+            Details
+          </button>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onApply(job);
+            }}
+            className="w-full flex items-center justify-center gap-2 bg-[#185FA5] text-white py-3 text-sm font-semibold hover:bg-[#1A56DB] transition-colors duration-200"
+          >
+            Apply Now
+          </button>
+        </div>
       </div>
     </article>
   );
