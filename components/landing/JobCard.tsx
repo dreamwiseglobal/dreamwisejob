@@ -103,28 +103,38 @@ export default function JobCard({ job, index, onApply }: JobCardProps) {
 
       {/* CTA */}
       <div className="p-6 pt-0">
-        {onApply ? (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onApply(job);
-            }}
-            className="w-full flex items-center justify-center gap-2 bg-[#185FA5] text-white py-3 text-sm font-semibold hover:bg-[#1A56DB] transition-colors duration-200 group/btn"
-          >
-            Apply Now
-            <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-200" />
-          </button>
-        ) : (
+        <div className="grid grid-cols-2 gap-3">
           <Link
-            href={`/apply-now?job=${encodeURIComponent(job.title)}`}
+            href={`/jobs/${job.id}`}
             onClick={(e) => e.stopPropagation()}
-            className="w-full flex items-center justify-center gap-2 bg-[#185FA5] text-white py-3 text-sm font-semibold hover:bg-[#1A56DB] transition-colors duration-200 group/btn"
+            className="w-full inline-flex items-center justify-center border border-[#185FA5] text-[#185FA5] py-3 text-sm font-semibold hover:bg-[#E6F1FB] transition-colors duration-200"
           >
-            Apply Now
-            <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-200" />
+            Details
           </Link>
-        )}
+
+          {onApply ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onApply(job);
+              }}
+              className="w-full flex items-center justify-center gap-2 bg-[#185FA5] text-white py-3 text-sm font-semibold hover:bg-[#1A56DB] transition-colors duration-200 group/btn"
+            >
+              Apply Now
+              <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-200" />
+            </button>
+          ) : (
+            <Link
+              href={`/jobs?job=${encodeURIComponent(job.title)}`}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full flex items-center justify-center gap-2 bg-[#185FA5] text-white py-3 text-sm font-semibold hover:bg-[#1A56DB] transition-colors duration-200 group/btn"
+            >
+              Apply Now
+              <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-200" />
+            </Link>
+          )}
+        </div>
       </div>
     </motion.article>
   );

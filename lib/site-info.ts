@@ -18,7 +18,7 @@ export const siteInfo = {
     twitter: "https://twitter.com/pracapolska",
   },
   nav: [
-    { label: "Jobs", href: "/#jobs" },
+    { label: "Jobs", href: "/jobs" },
     { label: "How It Works", href: "/#how-it-works" },
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },

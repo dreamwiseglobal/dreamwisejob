@@ -31,7 +31,7 @@ export default async function Page({ params }: PageProps) {
       <div className="max-w-6xl mx-auto px-4 py-10">
         <div className="flex items-center justify-between gap-4 mb-6">
           <Link
-            href="/#jobs"
+            href="/jobs"
             className="text-sm text-[#185FA5] hover:underline"
           >
             ← Back to jobs
