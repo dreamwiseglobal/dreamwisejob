@@ -8,9 +8,10 @@ import Link from "next/link";
 interface JobCardProps {
   job: Job;
   index: number;
+  onApply?: (job: Job) => void;
 }
 
-export default function JobCard({ job, index }: JobCardProps) {
+export default function JobCard({ job, index, onApply }: JobCardProps) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -93,13 +94,24 @@ export default function JobCard({ job, index }: JobCardProps) {
 
       {/* CTA */}
       <div className="p-6 pt-0">
-        <Link
-          href={`/contact?job=${encodeURIComponent(job.title)}`}
-          className="w-full flex items-center justify-center gap-2 bg-[#185FA5] text-white py-3 text-sm font-semibold hover:bg-[#1A56DB] transition-colors duration-200 group/btn"
-        >
-          Apply Now
-          <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-200" />
-        </Link>
+        {onApply ? (
+          <button
+            type="button"
+            onClick={() => onApply(job)}
+            className="w-full flex items-center justify-center gap-2 bg-[#185FA5] text-white py-3 text-sm font-semibold hover:bg-[#1A56DB] transition-colors duration-200 group/btn"
+          >
+            Apply Now
+            <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-200" />
+          </button>
+        ) : (
+          <Link
+            href={`/apply-now?job=${encodeURIComponent(job.title)}`}
+            className="w-full flex items-center justify-center gap-2 bg-[#185FA5] text-white py-3 text-sm font-semibold hover:bg-[#1A56DB] transition-colors duration-200 group/btn"
+          >
+            Apply Now
+            <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-200" />
+          </Link>
+        )}
       </div>
     </motion.article>
   );

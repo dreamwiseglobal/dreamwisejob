@@ -5,6 +5,7 @@ import Script from "next/script";
 import { siteInfo } from "@/lib/site-info";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
+import { cookies } from "next/headers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,14 +28,18 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const cookieLang = cookieStore.get("lang-current")?.value;
+  const initialLang = cookieLang === "en" || cookieLang === "pl" ? cookieLang : "pl";
+
   return (
     <html
-      lang="en"
+      lang={initialLang}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
@@ -63,7 +68,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <Navbar />
+        <Navbar initialLang={initialLang} />
 
         {children}
 
