@@ -8,8 +8,15 @@ export interface Job {
   salaryMax: number;
   currency: string;
   category: string;
+  overview: string;
   description: string[];
+  requirements: string[];
   benefits: JobBenefit[];
+  contractType: string;
+  workSchedule: string;
+  experienceLevel: string;
+  language: string;
+  accommodation: string;
   urgent?: boolean;
   featured?: boolean;
   imageQuery: string;
@@ -24,11 +31,19 @@ export const jobs: Job[] = [
     salaryMax: 1300,
     currency: "€",
     category: "Logistics",
+    overview:
+      "Join a modern warehouse team handling picking, packing, and dispatch. This role suits candidates who are organized, punctual, and comfortable with repetitive tasks.",
     description: [
       "Packing and sorting goods",
       "Loading and unloading products",
       "Scanning and labeling items",
       "Maintaining warehouse cleanliness",
+    ],
+    requirements: [
+      "Basic English helpful (not always required)",
+      "Ability to stand and lift light/medium loads",
+      "Willingness to work shifts (day/night as assigned)",
+      "Good attention to detail and safety rules",
     ],
     benefits: [
       "Accommodation support",
@@ -38,6 +53,11 @@ export const jobs: Job[] = [
       "Stable working hours",
       "Paid annual leave",
     ],
+    contractType: "Employment contract",
+    workSchedule: "Shift work (40–48 hrs/week)",
+    experienceLevel: "No experience required",
+    language: "Basic English (preferred)",
+    accommodation: "Support available",
     featured: true,
     imageQuery: "warehouse worker poland",
   },
@@ -49,11 +69,19 @@ export const jobs: Job[] = [
     salaryMax: 1500,
     currency: "€",
     category: "Manufacturing",
+    overview:
+      "Work on a production line in a clean, well-organized factory. Duties include operating simple machines and ensuring consistent quality standards.",
     description: [
       "Operating production machines",
       "Packaging finished products",
       "Quality checking items",
       "Following factory safety rules",
+    ],
+    requirements: [
+      "Comfortable with repetitive production tasks",
+      "Basic safety mindset and willingness to learn",
+      "Able to work rotating shifts",
+      "Good hand-eye coordination",
     ],
     benefits: [
       "Free training provided",
@@ -63,6 +91,11 @@ export const jobs: Job[] = [
       "Overtime opportunities",
       "Friendly work environment",
     ],
+    contractType: "Employment contract",
+    workSchedule: "Rotating shifts (40–48 hrs/week)",
+    experienceLevel: "Entry level",
+    language: "Basic English (preferred)",
+    accommodation: "Assistance available",
     urgent: true,
     imageQuery: "factory production worker",
   },
@@ -74,11 +107,19 @@ export const jobs: Job[] = [
     salaryMax: 1250,
     currency: "€",
     category: "Food Industry",
+    overview:
+      "Pack and label food products while following hygiene and quality procedures. Suitable for candidates who can work carefully in a fast-paced environment.",
     description: [
       "Packing food products",
       "Label checking and sealing",
       "Maintaining hygiene standards",
       "Working in temperature-controlled areas",
+    ],
+    requirements: [
+      "Willingness to follow strict hygiene rules",
+      "Comfortable working in cooler environments when needed",
+      "Ability to work on a line with speed and accuracy",
+      "Teamwork and punctuality",
     ],
     benefits: [
       "Accommodation assistance",
@@ -88,6 +129,11 @@ export const jobs: Job[] = [
       "Medical insurance",
       "Legal contract",
     ],
+    contractType: "Employment contract",
+    workSchedule: "Shift work (40–48 hrs/week)",
+    experienceLevel: "No experience required",
+    language: "Basic English (preferred)",
+    accommodation: "Assistance available",
     imageQuery: "food packaging factory",
   },
   {
@@ -98,11 +144,19 @@ export const jobs: Job[] = [
     salaryMax: 1800,
     currency: "€",
     category: "Construction",
+    overview:
+      "Support skilled workers on active construction sites. This role is physical and hands-on, ideal for candidates who are fit and safety-focused.",
     description: [
       "Assisting skilled workers",
       "Carrying construction materials",
       "Site cleaning and maintenance",
       "Basic support work on construction sites",
+    ],
+    requirements: [
+      "Physically fit and comfortable with outdoor work",
+      "Willingness to follow safety instructions",
+      "Basic construction experience is a plus (not required)",
+      "Reliable attendance and teamwork",
     ],
     benefits: [
       "Overtime pay",
@@ -112,6 +166,11 @@ export const jobs: Job[] = [
       "Long-term contract",
       "Insurance included",
     ],
+    contractType: "Employment contract",
+    workSchedule: "Day shift (40–48 hrs/week)",
+    experienceLevel: "Entry level (experience helps)",
+    language: "Basic English (preferred)",
+    accommodation: "Support available",
     urgent: true,
     imageQuery: "construction worker site",
   },
@@ -123,11 +182,19 @@ export const jobs: Job[] = [
     salaryMax: 1200,
     currency: "€",
     category: "Hospitality",
+    overview:
+      "Maintain cleanliness and comfort standards in hotel rooms and common areas. Ideal for detail-oriented candidates who enjoy structured work.",
     description: [
       "Cleaning hotel rooms",
       "Changing bed sheets and towels",
       "Maintaining room hygiene",
       "Supporting hotel operations",
+    ],
+    requirements: [
+      "Attention to detail and cleanliness",
+      "Ability to work on your feet for long periods",
+      "Positive attitude and guest-friendly behavior",
+      "Prior housekeeping experience is a plus",
     ],
     benefits: [
       "Free meals during duty",
@@ -137,6 +204,11 @@ export const jobs: Job[] = [
       "Medical insurance",
       "Stable working schedule",
     ],
+    contractType: "Employment contract",
+    workSchedule: "Day shift / split shift (40–48 hrs/week)",
+    experienceLevel: "Entry level (experience helps)",
+    language: "Basic English (preferred)",
+    accommodation: "Support available",
     imageQuery: "hotel housekeeping staff",
   },
   {
@@ -147,11 +219,19 @@ export const jobs: Job[] = [
     salaryMax: 1100,
     currency: "€",
     category: "Maintenance",
+    overview:
+      "Keep offices and facilities clean, safe, and well-maintained. Best for candidates who are dependable and comfortable with routine cleaning tasks.",
     description: [
       "Cleaning offices and buildings",
       "Waste management",
       "Maintaining hygiene standards",
       "Supporting maintenance teams",
+    ],
+    requirements: [
+      "Basic cleaning experience helpful (not required)",
+      "Responsible and able to follow checklists",
+      "Comfortable using standard cleaning tools",
+      "Teamwork and punctuality",
     ],
     benefits: [
       "Fixed duty hours",
@@ -161,6 +241,11 @@ export const jobs: Job[] = [
       "Insurance provided",
       "Safe working environment",
     ],
+    contractType: "Employment contract",
+    workSchedule: "Fixed hours (40–48 hrs/week)",
+    experienceLevel: "No experience required",
+    language: "Basic English (preferred)",
+    accommodation: "Assistance available",
     imageQuery: "office cleaning maintenance",
   },
   {
@@ -171,11 +256,19 @@ export const jobs: Job[] = [
     salaryMax: 1400,
     currency: "€",
     category: "Food & Beverage",
+    overview:
+      "Support the kitchen team with prep, cleaning, and basic food handling. Great for candidates who enjoy teamwork in a fast-paced environment.",
     description: [
       "Assisting chefs in the kitchen",
       "Washing and preparing ingredients",
       "Maintaining kitchen cleanliness",
       "Supporting food preparation",
+    ],
+    requirements: [
+      "Willingness to follow hygiene and safety rules",
+      "Able to work during peak hours/weekends",
+      "Quick learner and team player",
+      "Kitchen experience is a plus (not required)",
     ],
     benefits: [
       "Free meals",
@@ -185,6 +278,11 @@ export const jobs: Job[] = [
       "Career growth opportunities",
       "Medical insurance",
     ],
+    contractType: "Employment contract",
+    workSchedule: "Shift work (40–48 hrs/week)",
+    experienceLevel: "Entry level",
+    language: "Basic English (preferred)",
+    accommodation: "Support available",
     imageQuery: "restaurant kitchen helper cooking",
   },
   {
@@ -195,11 +293,19 @@ export const jobs: Job[] = [
     salaryMax: 2000,
     currency: "€",
     category: "Transport",
+    overview:
+      "Deliver packages safely and on time across assigned routes. Ideal for responsible drivers who can follow schedules and provide good customer service.",
     description: [
       "Delivering goods safely",
       "Following delivery schedules",
       "Maintaining vehicle cleanliness",
       "Customer interaction and support",
+    ],
+    requirements: [
+      "Valid driving license (category depends on role)",
+      "Safe driving habits and punctuality",
+      "Basic navigation skills (GPS/maps)",
+      "Customer-friendly communication",
     ],
     benefits: [
       "Fuel support",
@@ -209,6 +315,11 @@ export const jobs: Job[] = [
       "Stable monthly income",
       "Long-term opportunities",
     ],
+    contractType: "Employment contract",
+    workSchedule: "Flexible / shifts (40–50 hrs/week)",
+    experienceLevel: "Some driving experience preferred",
+    language: "Basic English (preferred)",
+    accommodation: "Assistance available",
     featured: true,
     imageQuery: "delivery driver van road",
   },
@@ -220,11 +331,19 @@ export const jobs: Job[] = [
     salaryMax: 2500,
     currency: "€",
     category: "Engineering",
+    overview:
+      "Perform welding and technical fabrication work based on drawings and specifications. This role fits skilled candidates who can maintain high quality standards.",
     description: [
       "Welding metal structures",
       "Operating technical equipment",
       "Reading technical drawings",
       "Quality inspection work",
+    ],
+    requirements: [
+      "Relevant welding/technical experience",
+      "Ability to read basic technical drawings",
+      "Focus on quality and safety",
+      "Certificates are a plus (if available)",
     ],
     benefits: [
       "High overtime earnings",
@@ -234,6 +353,11 @@ export const jobs: Job[] = [
       "Insurance included",
       "Career development opportunities",
     ],
+    contractType: "Employment contract",
+    workSchedule: "Shift work (40–50 hrs/week)",
+    experienceLevel: "Skilled",
+    language: "Basic English (preferred)",
+    accommodation: "Support available",
     urgent: true,
     imageQuery: "welder welding metal industrial",
   },
@@ -245,11 +369,19 @@ export const jobs: Job[] = [
     salaryMax: 1700,
     currency: "€",
     category: "Healthcare",
+    overview:
+      "Assist elderly clients with daily activities and basic care under a structured routine. Best for empathetic candidates with a caring attitude.",
     description: [
       "Assisting elderly people in daily activities",
       "Providing basic care and support",
       "Maintaining hygiene and comfort",
       "Supporting medication reminders",
+    ],
+    requirements: [
+      "Caring attitude and patience",
+      "Basic caregiving experience helpful (not required)",
+      "Willingness to follow routines and instructions",
+      "Comfortable assisting with mobility and daily tasks",
     ],
     benefits: [
       "Food and accommodation provided",
@@ -259,6 +391,11 @@ export const jobs: Job[] = [
       "Friendly workplace",
       "Legal employment contract",
     ],
+    contractType: "Employment contract",
+    workSchedule: "Shift work (40–48 hrs/week)",
+    experienceLevel: "Entry level (experience helps)",
+    language: "Basic English (preferred)",
+    accommodation: "Provided / support available",
     featured: true,
     imageQuery: "caregiver elderly care assistant",
   },
@@ -268,3 +405,4 @@ export const jobCategories = [
   "All",
   ...Array.from(new Set(jobs.map((j) => j.category))),
 ];
+
