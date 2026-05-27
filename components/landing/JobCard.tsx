@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { MapPin, Euro, CheckCircle, ArrowUpRight } from "lucide-react";
 import type { Job } from "@/lib/jobs-data";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface JobCardProps {
   job: Job;
@@ -12,13 +13,21 @@ interface JobCardProps {
 }
 
 export default function JobCard({ job, index, onApply }: JobCardProps) {
+  const router = useRouter();
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.4, delay: (index % 3) * 0.08 }}
-      className="bg-white border border-[#D3D1C7] group hover:border-[#185FA5] hover:shadow-lg transition-all duration-300 flex flex-col"
+      onClick={() => router.push(`/jobs/${job.id}`)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") router.push(`/jobs/${job.id}`);
+      }}
+      role="link"
+      tabIndex={0}
+      className="bg-white border border-[#D3D1C7] group hover:border-[#185FA5] hover:shadow-lg transition-all duration-300 flex flex-col cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#378ADD]"
     >
       {/* Card header */}
       <div className="p-6 pb-4 border-b border-[#D3D1C7] relative">
@@ -97,7 +106,10 @@ export default function JobCard({ job, index, onApply }: JobCardProps) {
         {onApply ? (
           <button
             type="button"
-            onClick={() => onApply(job)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onApply(job);
+            }}
             className="w-full flex items-center justify-center gap-2 bg-[#185FA5] text-white py-3 text-sm font-semibold hover:bg-[#1A56DB] transition-colors duration-200 group/btn"
           >
             Apply Now
@@ -106,6 +118,7 @@ export default function JobCard({ job, index, onApply }: JobCardProps) {
         ) : (
           <Link
             href={`/apply-now?job=${encodeURIComponent(job.title)}`}
+            onClick={(e) => e.stopPropagation()}
             className="w-full flex items-center justify-center gap-2 bg-[#185FA5] text-white py-3 text-sm font-semibold hover:bg-[#1A56DB] transition-colors duration-200 group/btn"
           >
             Apply Now

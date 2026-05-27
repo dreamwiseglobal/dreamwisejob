@@ -68,8 +68,18 @@ function FieldError({ message }: { message?: string }) {
 }
 
 function JobCard({ job, onApply }: { job: Job; onApply: (job: Job) => void }) {
+  const router = useRouter();
+
   return (
-    <article className="bg-white border border-[#D3D1C7] hover:border-[#185FA5] hover:shadow-lg transition-all duration-300 flex flex-col">
+    <article
+      onClick={() => router.push(`/jobs/${job.id}`)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") router.push(`/jobs/${job.id}`);
+      }}
+      role="link"
+      tabIndex={0}
+      className="bg-white border border-[#D3D1C7] hover:border-[#185FA5] hover:shadow-lg transition-all duration-300 flex flex-col cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#378ADD]"
+    >
       <div className="p-6 pb-4 border-b border-[#D3D1C7]">
         <div className="flex gap-2 mb-4">
           {job.urgent && (
@@ -122,7 +132,10 @@ function JobCard({ job, onApply }: { job: Job; onApply: (job: Job) => void }) {
       <div className="p-6 pt-0">
         <button
           type="button"
-          onClick={() => onApply(job)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onApply(job);
+          }}
           className="w-full flex items-center justify-center gap-2 bg-[#185FA5] text-white py-3 text-sm font-semibold hover:bg-[#1A56DB] transition-colors duration-200"
         >
           Apply Now
