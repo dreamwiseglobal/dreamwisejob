@@ -40,7 +40,7 @@ export default function HeroSection() {
               <span className="font-mono text-xs text-white/70 uppercase tracking-widest">
                 Based in Poland
               </span>
-              <div className="flex-1 h-px bg-white/20 ml-2" />
+              {/* <div className="flex-1 h-px bg-white/20 ml-2" /> */}
             </motion.div>
 
             <motion.h1

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { jobs } from "@/lib/jobs-data";
@@ -30,10 +32,7 @@ export default async function Page({ params }: PageProps) {
     <main className="bg-[#F1EFE8] min-h-screen">
       <div className="max-w-6xl mx-auto px-4 py-10">
         <div className="flex items-center justify-between gap-4 mb-6">
-          <Link
-            href="/jobs"
-            className="text-sm text-[#185FA5] hover:underline"
-          >
+          <Link href="/jobs" className="text-sm text-[#185FA5] hover:underline">
             ← Back to jobs
           </Link>
           <JobDetailApply

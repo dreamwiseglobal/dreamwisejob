@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import type { Metadata } from "next";
 import ApplyNowPage from "@/components/jobs/ApplyNowPage";
 import { siteInfo } from "@/lib/site-info";
@@ -11,4 +13,3 @@ export const metadata: Metadata = {
 export default function Page() {
   return <ApplyNowPage />;
 }
-

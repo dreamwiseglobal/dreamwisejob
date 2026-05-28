@@ -5,7 +5,7 @@ export const siteInfo = {
     "Connecting skilled workers from around the world with trusted Polish employers. Legal contracts, accommodation support, and a smooth onboarding process.",
   shortDescription: "Poland's leading job platform for international workers.",
   email: "contact@pracapolska.pl",
-  phone: "+48 123 456 789",
+  phone: "+48 732 097 929",
   address: "ul. Marszałkowska 84, 00-514 Warsaw, Poland",
   founded: "2019",
   totalJobs: "2,400+",
@@ -21,7 +21,7 @@ export const siteInfo = {
     { label: "Jobs", href: "/jobs" },
     { label: "How It Works", href: "/#how-it-works" },
     { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
+    // { label: "Contact", href: "/contact" },
   ],
   stats: [
     { label: "Active Jobs", value: "2,400+" },
