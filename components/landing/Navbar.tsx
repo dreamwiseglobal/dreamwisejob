@@ -99,10 +99,8 @@ export default function Navbar({
 
     if (target === "en") {
       const expire = "expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-      document.cookie =
-        `googtrans=; ${expire} path=/;`;
-      document.cookie =
-        `googtrans=; ${expire} path=/; domain=${window.location.hostname};`;
+      document.cookie = `googtrans=; ${expire} path=/;`;
+      document.cookie = `googtrans=; ${expire} path=/; domain=${window.location.hostname};`;
 
       const trySwitchBack = (attempts = 0) => {
         const select =
@@ -154,7 +152,7 @@ export default function Navbar({
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-blue-pale hover:text-white text-sm font-medium transition-colors duration-200 relative group"
+                className="text-white hover:text-white text-sm font-medium transition-colors duration-200 relative group"
               >
                 {item.label}
                 <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#5DCAA5] group-hover:w-full transition-all duration-300" />
@@ -171,7 +169,7 @@ export default function Navbar({
               href="/contact"
               className="bg-[#1D9E75] text-white px-5 py-2 text-sm font-semibold hover:bg-[#0F6E56] transition-colors duration-200 border border-[#1D9E75] hover:border-[#0F6E56]"
             >
-              Post a Job
+              Contact us
             </Link>
           </div>
 

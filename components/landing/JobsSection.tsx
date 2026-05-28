@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { jobs, jobCategories, type Job } from "@/lib/jobs-data";
+import { jobs, type Job } from "@/lib/jobs-data";
 import JobCard from "@/components/landing/JobCard";
-import { Search } from "lucide-react";
 import ApplyDrawer from "@/components/jobs/ApplyDrawer";
+import Link from "next/link";
 
 export default function JobsSection() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -13,7 +13,7 @@ export default function JobsSection() {
   const [open, setOpen] = useState(false);
   const [activeJob, setActiveJob] = useState<Job | null>(null);
 
-  const filtered: Job[] = jobs.filter((job) => {
+  const filtered: Job[] = jobs.slice(0, 6).filter((job) => {
     const matchesCategory =
       activeCategory === "All" || job.category === activeCategory;
     const matchesQuery =
@@ -40,7 +40,7 @@ export default function JobsSection() {
           </div>
 
           {/* Search */}
-          <div className="relative w-full lg:w-80">
+          {/* <div className="relative w-full lg:w-80">
             <Search className="w-4 h-4 text-[#5F5E5A] absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
@@ -49,11 +49,11 @@ export default function JobsSection() {
               onChange={(e) => setQuery(e.target.value)}
               className="w-full bg-white border border-[#D3D1C7] pl-10 pr-4 py-3 text-sm text-[#2C2C2A] placeholder-[#5F5E5A] focus:outline-none focus:border-[#185FA5] transition-colors duration-200 font-body"
             />
-          </div>
+          </div> */}
         </div>
 
         {/* Category filters */}
-        <div className="flex flex-wrap gap-2 mb-10 border-b border-[#D3D1C7] pb-6">
+        {/* <div className="flex flex-wrap gap-2 mb-10 border-b border-[#D3D1C7] pb-6">
           {jobCategories.map((cat) => (
             <button
               key={cat}
@@ -72,7 +72,7 @@ export default function JobsSection() {
               {filtered.length} result{filtered.length !== 1 ? "s" : ""}
             </span>
           )}
-        </div>
+        </div> */}
 
         {/* Grid */}
         {filtered.length > 0 ? (
@@ -115,19 +115,15 @@ export default function JobsSection() {
           <p className="text-[#5F5E5A] text-sm mb-4">
             Can&apos;t find what you&apos;re looking for?
           </p>
-          <a
-            href="/contact"
+          <Link
+            href="/jobs"
             className="inline-flex items-center gap-2 border-2 border-[#185FA5] text-[#185FA5] px-8 py-3 text-sm font-semibold hover:bg-[#185FA5] hover:text-white transition-all duration-200"
           >
-            Send Your CV Directly
-          </a>
+            Explore all jobs
+          </Link>
         </div>
       </div>
-      <ApplyDrawer
-        job={activeJob}
-        open={open}
-        onClose={() => setOpen(false)}
-      />
+      <ApplyDrawer job={activeJob} open={open} onClose={() => setOpen(false)} />
     </section>
   );
 }

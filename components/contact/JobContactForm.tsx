@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,11 +10,13 @@ import {
   User,
   Mail,
   Phone,
+  Briefcase,
   MessageSquare,
-  Tag,
   AlertCircle,
 } from "lucide-react";
 import { siteInfo } from "@/lib/site-info";
+import { jobs } from "@/lib/jobs-data";
+import { useSearchParams } from "next/navigation";
 
 const contactSchema = z.object({
   name: z
@@ -26,10 +29,13 @@ const contactSchema = z.object({
     .min(7, "Phone number is too short")
     .max(20, "Phone number is too long")
     .regex(/^[+\d\s\-()]+$/, "Please enter a valid phone number"),
-  subject: z
-    .string()
-    .min(3, "Subject must be at least 3 characters")
-    .max(100, "Subject is too long"),
+  jobTitle: z.string().min(1, "Please select a job or enter your interest"),
+  country: z.string().min(2, "Please enter your country of origin"),
+  experience: z
+    .enum(["none", "some", "experienced"])
+    .refine((v) => ["none", "some", "experienced"].includes(v), {
+      error: "Please select your experience level",
+    }),
   message: z
     .string()
     .min(10, "Message must be at least 10 characters")
@@ -58,31 +64,43 @@ const inputClass =
 const errorInputClass =
   "w-full bg-white border border-[#E24B4A] px-4 py-3 text-sm text-[#2C2C2A] placeholder-[#5F5E5A] focus:outline-none focus:border-[#E24B4A] transition-colors duration-200 font-body";
 
-export default function ContactForm() {
+export default function JobContactForm() {
+  const searchParams = useSearchParams();
+  const prefilledJob = searchParams.get("job") ?? "";
+
   const {
     register,
     handleSubmit,
-    reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
+    defaultValues: {
+      jobTitle: prefilledJob,
+    },
   });
 
+  useEffect(() => {
+    if (prefilledJob) setValue("jobTitle", prefilledJob);
+  }, [prefilledJob, setValue]);
+
   const onSubmit = (data: ContactFormData) => {
-    const subject = encodeURIComponent(data.subject);
+    const subject = encodeURIComponent(
+      `Job Application: ${data.jobTitle} — ${data.name}`,
+    );
     const body = encodeURIComponent(
-      `Hello ${siteInfo.name} Team,\n\n` +
-        `--- Contact Details ---\n` +
+      `Hello ${siteInfo.name} Team,\n\nI am interested in applying for a position.\n\n` +
+        `--- Applicant Details ---\n` +
         `Name: ${data.name}\n` +
         `Email: ${data.email}\n` +
-        `Phone: ${data.phone}\n\n` +
+        `Phone: ${data.phone}\n` +
+        `Country of Origin: ${data.country}\n` +
+        `Job Interest: ${data.jobTitle}\n` +
+        `Experience Level: ${data.experience}\n\n` +
         `--- Message ---\n${data.message}\n\n` +
-        `Sent via contact form.`,
+        `Sent via PracaPolska contact form.`,
     );
-    window.open(
-      `mailto:${siteInfo.contactEmail}?subject=${subject}&body=${body}`,
-    );
-    reset();
+    window.location.href = `mailto:${siteInfo.contactEmail}?subject=${subject}&body=${body}`;
   };
 
   return (
@@ -95,7 +113,7 @@ export default function ContactForm() {
       noValidate
     >
       <h2 className="font-heading font-700 text-2xl text-[#2C2C2A] mb-2">
-        Get in Touch
+        Apply or Get in Touch
       </h2>
       <p className="text-[#5F5E5A] text-sm mb-8 font-body">
         Fill in your details below and we&apos;ll be in touch within 24 hours.
@@ -116,6 +134,20 @@ export default function ContactForm() {
           <FieldError message={errors.name?.message} />
         </div>
 
+        {/* Email */}
+        <div>
+          <label className="flex items-center gap-1.5 text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 font-body">
+            <Mail className="w-3.5 h-3.5" /> Email Address
+          </label>
+          <input
+            {...register("email")}
+            type="email"
+            placeholder="your@email.com"
+            className={errors.email ? errorInputClass : inputClass}
+          />
+          <FieldError message={errors.email?.message} />
+        </div>
+
         {/* Phone */}
         <div>
           <label className="flex items-center gap-1.5 text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 font-body">
@@ -130,32 +162,77 @@ export default function ContactForm() {
           <FieldError message={errors.phone?.message} />
         </div>
 
-        {/* Email */}
-        <div className="sm:col-span-2">
+        {/* Country */}
+        <div>
           <label className="flex items-center gap-1.5 text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 font-body">
-            <Mail className="w-3.5 h-3.5" /> Email Address
+            <Mail className="w-3.5 h-3.5" /> Country of Origin
           </label>
           <input
-            {...register("email")}
-            type="email"
-            placeholder="your@email.com"
-            className={errors.email ? errorInputClass : inputClass}
+            {...register("country")}
+            type="text"
+            placeholder="e.g. Nepal, Ukraine, Pakistan"
+            className={errors.country ? errorInputClass : inputClass}
           />
-          <FieldError message={errors.email?.message} />
+          <FieldError message={errors.country?.message} />
         </div>
 
-        {/* Subject */}
+        {/* Job Title */}
         <div className="sm:col-span-2">
           <label className="flex items-center gap-1.5 text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 font-body">
-            <Tag className="w-3.5 h-3.5" /> Subject
+            <Briefcase className="w-3.5 h-3.5" /> Job Interest
           </label>
-          <input
-            {...register("subject")}
-            type="text"
-            placeholder="What is this regarding?"
-            className={errors.subject ? errorInputClass : inputClass}
-          />
-          <FieldError message={errors.subject?.message} />
+          <select
+            {...register("jobTitle")}
+            className={`${errors.jobTitle ? errorInputClass : inputClass} appearance-none cursor-pointer`}
+          >
+            <option value="">Select a job position...</option>
+            {jobs.map((job) => (
+              <option key={job.id} value={job.title}>
+                {job.title} — {job.currency}
+                {job.salaryMin}–{job.currency}
+                {job.salaryMax}/mo
+              </option>
+            ))}
+            <option value="Other / General Inquiry">
+              Other / General Inquiry
+            </option>
+          </select>
+          <FieldError message={errors.jobTitle?.message} />
+        </div>
+
+        {/* Experience */}
+        <div className="sm:col-span-2">
+          <label className="text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-3 block font-body">
+            Experience Level
+          </label>
+          <div className="flex flex-wrap gap-3">
+            {(
+              [
+                { value: "none", label: "No Experience" },
+                { value: "some", label: "Some Experience" },
+                { value: "experienced", label: "Experienced" },
+              ] as const
+            ).map((opt) => (
+              <label
+                key={opt.value}
+                className="flex items-center gap-2 cursor-pointer group"
+              >
+                <input
+                  {...register("experience")}
+                  type="radio"
+                  value={opt.value}
+                  className="sr-only"
+                />
+                <span className="w-4 h-4 border-2 border-[#D3D1C7] flex items-center justify-center group-has-[:checked]:border-[#185FA5] transition-colors">
+                  <span className="w-2 h-2 bg-[#185FA5] opacity-0 group-has-[:checked]:opacity-100 transition-opacity" />
+                </span>
+                <span className="text-sm text-[#5F5E5A] group-has-[:checked]:text-[#2C2C2A] font-body">
+                  {opt.label}
+                </span>
+              </label>
+            ))}
+          </div>
+          <FieldError message={errors.experience?.message} />
         </div>
 
         {/* Message */}
@@ -166,7 +243,7 @@ export default function ContactForm() {
           <textarea
             {...register("message")}
             rows={5}
-            placeholder="How can we help you?"
+            placeholder="Tell us about yourself, your experience, and why you want to work in Poland..."
             className={`${errors.message ? errorInputClass : inputClass} resize-none`}
           />
           <FieldError message={errors.message?.message} />
@@ -179,7 +256,7 @@ export default function ContactForm() {
         className="mt-8 w-full flex items-center justify-center gap-2 bg-[#185FA5] text-white py-4 font-semibold text-sm hover:bg-[#1A56DB] active:bg-[#0F6E56] transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
       >
         <Send className="w-4 h-4" />
-        {isSubmitting ? "Opening your email..." : "Send Message"}
+        {isSubmitting ? "Opening your email..." : "Submit Application"}
       </button>
 
       <p className="text-center text-xs text-[#5F5E5A] mt-4 font-body">
