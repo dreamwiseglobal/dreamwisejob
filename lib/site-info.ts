@@ -5,7 +5,7 @@ export const siteInfo = {
     "Connecting skilled workers from around the world with trusted Polish employers. Legal contracts, accommodation support, and a smooth onboarding process.",
   shortDescription: "Poland's leading job platform for international workers.",
   email: "contact@pracapolska.pl",
-  phone: "+48 732 097 929",
+  phone: "+48732097929",
   address: "ul. Marszałkowska 84, 00-514 Warsaw, Poland",
   founded: "2019",
   totalJobs: "2,400+",
@@ -49,5 +49,6 @@ export const siteInfo = {
         "We coordinate accommodation, travel support, and employer onboarding so your first day is stress-free.",
     },
   ],
-  contactEmail: "pracapolska@gmail.com",
+  // contactEmail: "pracapolska@gmail.com",
+  contactEmail: "contact@dreamwise.pl",
 } as const;
