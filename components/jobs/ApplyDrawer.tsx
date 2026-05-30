@@ -35,8 +35,8 @@ const applySchema = z.object({
     .regex(/^[+\d\s\-()]+$/, "Please enter a valid phone number"),
   country: z.string().min(2, "Please enter your country of origin"),
   currentCity: z.string().min(2, "Please enter your current city"),
-  experienceYears: z.coerce
-    .number<number>()
+  experienceYears: z
+    .number()
     .min(0, "Experience cannot be negative")
     .max(60, "Please enter a valid number"),
   notes: z
@@ -74,7 +74,6 @@ export default function ApplyDrawer({
   onClose: () => void;
 }) {
   const [submitted, setSubmitted] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
@@ -91,7 +90,6 @@ export default function ApplyDrawer({
 
   const closeAndReset = useCallback(() => {
     setSubmitted(false);
-    setSubmitError(null);
     reset();
     onClose();
   }, [onClose, reset]);
@@ -114,50 +112,66 @@ export default function ApplyDrawer({
     };
   }, [open]);
 
-  const onSubmit = async (data: ApplyFormData) => {
-    setSubmitError(null);
+  const onSubmit = (data: ApplyFormData) => {
+    const cvName = data.cv?.[0]?.name ?? "—";
+    const passportName = data.passport?.[0]?.name ?? "—";
+    const photoName = data.photo?.[0]?.name ?? "none";
+    const certNames =
+      data.certificates && data.certificates.length > 0
+        ? Array.from(data.certificates)
+            .map((f) => f.name)
+            .join(", ")
+        : "none";
 
-    const formData = new FormData();
-    formData.set("jobTitle", job?.title ?? "");
-    formData.set("fullName", data.fullName);
-    formData.set("email", data.email);
-    formData.set("phone", data.phone);
-    formData.set("country", data.country);
-    formData.set("currentCity", data.currentCity);
-    formData.set("experienceYears", String(data.experienceYears));
-    formData.set("notes", data.notes);
+    // ✅ Plain strings — no encodeURIComponent here
+    const subject = `Job Application – ${job?.title ?? "Open Position"} – ${data.fullName}`;
 
-    if (data.cv?.[0]) formData.set("cv", data.cv[0]);
-    if (data.passport?.[0]) formData.set("passport", data.passport[0]);
-    if (data.photo?.[0]) formData.set("photo", data.photo[0]);
+    const body = [
+      `Position applied for: ${job?.title ?? "N/A"}`,
+      `Location: ${job?.location ?? "N/A"}`,
+      "",
+      "── Applicant details ──────────────────────",
+      `Full name:        ${data.fullName}`,
+      `Email:            ${data.email}`,
+      `Phone:            ${data.phone}`,
+      `Country of origin:${data.country}`,
+      `Current city:     ${data.currentCity}`,
+      `Years of experience: ${data.experienceYears}`,
+      "",
+      "── Notes ──────────────────────────────────",
+      data.notes,
+      "",
+      "── Attachments (please attach before sending) ──",
+      `CV / Resume:  ${cvName}`,
+      `Passport:     ${passportName}`,
+      `Photo:        ${photoName}`,
+      `Certificates: ${certNames}`,
+      "",
+      "──────────────────────────────────────────",
+      "This email was pre-filled from the job application form.",
+    ].join("\n");
 
-    if (data.certificates && data.certificates.length > 0) {
-      Array.from(data.certificates).forEach((file) => {
-        formData.append("certificates", file);
-      });
-    }
+    // ✅ Encode only once here, inside the URL
+    const gmailLink =
+      `https://mail.google.com/mail/?view=cm&fs=1` +
+      `&to=${encodeURIComponent(siteInfo.contactEmail)}` +
+      `&su=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(body)}`;
 
-    const res = await fetch("/api/apply", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!res.ok) {
-      const payload = (await res.json().catch(() => null)) as
-        | { error?: string }
-        | null;
-      setSubmitError(payload?.error ?? "Failed to submit. Please try again.");
-      return;
-    }
-
+    window.open(gmailLink, "_blank");
     setSubmitted(true);
   };
-
   return (
+    // FIX: replaced pointer-events-none root with visibility toggle + inert
+    // so the close button and overlay are never silently blocked.
     <div
-      className={`fixed inset-0 z-50 ${open ? "pointer-events-auto" : "pointer-events-none"}`}
+      className={`fixed inset-0 z-50 transition-all duration-200 ${
+        open ? "visible" : "invisible"
+      }`}
       aria-hidden={!open}
+      inert={!open ? true : undefined}
     >
+      {/* Backdrop – click anywhere on the left half to close */}
       <button
         type="button"
         onClick={closeAndReset}
@@ -165,10 +179,11 @@ export default function ApplyDrawer({
           open ? "opacity-100" : "opacity-0"
         }`}
         aria-label="Close application panel"
-        tabIndex={open ? 0 : -1}
       />
 
       <aside
+        tabIndex={-1}
+        aria-labelledby="drawer-title"
         className={`absolute inset-y-0 right-0 w-full md:w-1/2 bg-[#F1EFE8] border-l border-[#D3D1C7] shadow-2xl transform transition-transform duration-300 ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
@@ -177,13 +192,14 @@ export default function ApplyDrawer({
         aria-label="Job application"
       >
         <div className="h-full overflow-y-auto">
+          {/* Sticky header */}
           <div className="sticky top-0 z-10 bg-[#F1EFE8] border-b border-[#D3D1C7]">
             <div className="p-6 flex items-start gap-4">
               <div className="flex-1">
                 <p className="font-mono text-xs text-[#1D9E75] uppercase tracking-widest">
                   Apply Now
                 </p>
-                <h2 className="font-heading font-800 text-2xl text-[#2C2C2A] mt-2">
+                <h2 className="font-heading font-[800] text-2xl text-[#2C2C2A] mt-2">
                   {job ? job.title : "Job Application"}
                 </h2>
                 {job && (
@@ -207,16 +223,21 @@ export default function ApplyDrawer({
 
           <div className="p-6">
             {submitted ? (
+              /* ── Success state ── */
               <div className="bg-white border border-[#D3D1C7] p-6">
-                <h3 className="font-heading font-800 text-xl text-[#2C2C2A]">
-                  Application received
+                <h3 className="font-heading font-[800] text-xl text-[#2C2C2A]">
+                  Almost done!
                 </h3>
                 <p className="text-[#5F5E5A] text-sm mt-2">
-                  Thanks! Our team will review your documents and contact you
-                  soon via email or phone.
+                  Your email client has opened with all details pre-filled.
+                  Please{" "}
+                  <strong>
+                    attach your CV, passport and any other documents
+                  </strong>{" "}
+                  before hitting Send.
                 </p>
                 <p className="text-[#5F5E5A] text-sm mt-3">
-                  If you have questions, email{" "}
+                  Questions? Email us directly at{" "}
                   <a
                     className="text-[#1A56DB] underline"
                     href={`mailto:${siteInfo.contactEmail}`}
@@ -231,7 +252,7 @@ export default function ApplyDrawer({
                     onClick={() => setSubmitted(false)}
                     className="border-2 border-[#185FA5] text-[#185FA5] px-5 py-2.5 text-sm font-semibold hover:bg-[#185FA5] hover:text-white transition-colors duration-200"
                   >
-                    Submit another
+                    Back to form
                   </button>
                   <button
                     type="button"
@@ -243,19 +264,16 @@ export default function ApplyDrawer({
                 </div>
               </div>
             ) : (
+              /* ── Application form ── */
               <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="bg-white border border-[#D3D1C7] p-6"
                 noValidate
               >
-                {submitError && (
-                  <div className="mb-5 border border-[#E24B4A] bg-[#FFF5F5] px-4 py-3 text-sm text-[#B42318] font-body">
-                    {submitError}
-                  </div>
-                )}
                 <p className="text-[#5F5E5A] text-sm mb-6">
-                  Fill the required details and upload your documents. Fields
-                  marked with * are required.
+                  Fill in your details below. On submit your default email
+                  client will open with everything pre-filled — just attach your
+                  files and send.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -303,7 +321,10 @@ export default function ApplyDrawer({
                       Experience (years) *
                     </label>
                     <input
-                      {...register("experienceYears")}
+                      {...(register("experienceYears"),
+                      {
+                        valueAsNumber: true,
+                      })}
                       type="number"
                       min={0}
                       max={60}
@@ -351,62 +372,125 @@ export default function ApplyDrawer({
                     {...register("notes")}
                     rows={5}
                     placeholder="Tell us briefly about your experience and motivation..."
-                    className={errors.notes ? errorInputClass : inputClass}
+                    className={`${errors.notes ? errorInputClass : inputClass} resize-none`}
                   />
                   <FieldError message={errors.notes?.message} />
                 </div>
 
-                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
-                    <label className="text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 block font-body">
-                      CV / Resume *
-                    </label>
-                    <input
-                      {...register("cv")}
-                      type="file"
-                      accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                      className={errors.cv ? errorInputClass : inputClass}
-                    />
-                    <FieldError message={errors.cv?.message as string} />
+                {/* <div className="mt-8 border-t border-[#E7E5DC] pt-6">
+                  <p className="font-mono text-xs text-[#5F5E5A] uppercase tracking-widest mb-4">
+                    Documents
+                  </p>
+                  <p className="text-xs text-[#5F5E5A] mb-4 font-body">
+                    Select your files below. Their names will appear in the
+                    pre-filled email — you&apos;ll need to attach them manually
+                    before sending.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label className="text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 block font-body">
+                        CV / Resume *
+                      </label>
+                      <input
+                        {...register("cv")}
+                        type="file"
+                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                        className={errors.cv ? errorInputClass : inputClass}
+                      />
+                      <FieldError message={errors.cv?.message as string} />
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 block font-body">
+                        Passport copy *
+                      </label>
+                      <input
+                        {...register("passport")}
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        className={
+                          errors.passport ? errorInputClass : inputClass
+                        }
+                      />
+                      <FieldError
+                        message={errors.passport?.message as string}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 block font-body">
+                        Recent photo (optional)
+                      </label>
+                      <input
+                        {...register("photo")}
+                        type="file"
+                        accept=".jpg,.jpeg,.png,.pdf"
+                        className={inputClass}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 block font-body">
+                        Certificates (optional)
+                      </label>
+                      <input
+                        {...register("certificates")}
+                        type="file"
+                        multiple
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+                </div> */}
+
+                <div className="mt-8 border-t border-[#E7E5DC] pt-6">
+                  <p className="font-mono text-xs text-[#5F5E5A] uppercase tracking-widest mb-4">
+                    Documents
+                  </p>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                    <p className="text-sm font-semibold text-red-800 mb-2 font-body">
+                      📎 Please attach the following documents manually in Gmail
+                      before sending:
+                    </p>
+                    <ul className="space-y-2">
+                      <li className="flex items-start gap-2 text-sm text-blue-700 font-body">
+                        <span className="mt-0.5 text-blue-500">✱</span>
+                        <span>
+                          <strong>CV / Resume</strong> — PDF, DOC, DOCX, or
+                          image
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2 text-sm text-blue-700 font-body">
+                        <span className="mt-0.5 text-blue-500">✱</span>
+                        <span>
+                          <strong>Passport copy</strong> — PDF or image
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2 text-sm text-blue-700 font-body">
+                        <span className="mt-0.5 text-[#B5A992]">○</span>
+                        <span>
+                          <strong>Recent photo</strong> — JPG or PNG (optional)
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2 text-sm text-blue-700 font-body">
+                        <span className="mt-0.5 text-[#B5A992]">○</span>
+                        <span>
+                          <strong>Certificates</strong> — PDF or image
+                          (optional)
+                        </span>
+                      </li>
+                    </ul>
                   </div>
 
-                  <div>
-                    <label className="text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 block font-body">
-                      Passport copy *
-                    </label>
-                    <input
-                      {...register("passport")}
-                      type="file"
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      className={errors.passport ? errorInputClass : inputClass}
-                    />
-                    <FieldError message={errors.passport?.message as string} />
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 block font-body">
-                      Recent photo (optional)
-                    </label>
-                    <input
-                      {...register("photo")}
-                      type="file"
-                      accept=".jpg,.jpeg,.png,.pdf"
-                      className={inputClass}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 block font-body">
-                      Certificates (optional)
-                    </label>
-                    <input
-                      {...register("certificates")}
-                      type="file"
-                      multiple
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      className={inputClass}
-                    />
-                  </div>
+                  <p className="text-xs text-[#5F5E5A] font-body">
+                    After clicking <strong>Apply Now</strong>, Gmail will open
+                    with your details pre-filled. Use the{" "}
+                    <strong>📎 attach</strong> button in Gmail to add your
+                    documents before hitting Send.
+                  </p>
                 </div>
 
                 <div className="mt-6">
@@ -429,8 +513,13 @@ export default function ApplyDrawer({
                   disabled={isSubmitting}
                   className="mt-8 w-full bg-[#185FA5] text-white py-4 font-semibold text-sm hover:bg-[#1A56DB] transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? "Submitting..." : "Submit Application"}
+                  {isSubmitting ? "Opening email…" : "Submit Application"}
                 </button>
+
+                <p className="text-center text-xs text-[#5F5E5A] mt-4 font-body">
+                  Clicking submit opens your email client with all details
+                  pre-filled. Attach your documents before sending.
+                </p>
               </form>
             )}
           </div>
