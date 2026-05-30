@@ -240,9 +240,9 @@ function Drawer({
     });
 
     if (!res.ok) {
-      const payload = (await res.json().catch(() => null)) as
-        | { error?: string }
-        | null;
+      const payload = (await res.json().catch(() => null)) as {
+        error?: string;
+      } | null;
       setSubmitError(payload?.error ?? "Failed to submit. Please try again.");
       return;
     }
@@ -463,86 +463,50 @@ function Drawer({
 
                 <div className="mt-8 border-t border-[#E7E5DC] pt-6">
                   <p className="font-mono text-xs text-[#5F5E5A] uppercase tracking-widest mb-4">
-                    Required documents
+                    Documents
                   </p>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                      <label className="text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 block font-body">
-                        CV / Resume *
-                      </label>
-                      <input
-                        {...register("cv")}
-                        type="file"
-                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                        className={errors.cv ? errorInputClass : inputClass}
-                      />
-                      <FieldError message={errors.cv?.message as string} />
-                      <p className="text-[11px] text-[#5F5E5A] mt-2">
-                        PDF/DOC or image is acceptable.
-                      </p>
-                    </div>
-
-                    <div>
-                      <label className="text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 block font-body">
-                        Passport copy *
-                      </label>
-                      <input
-                        {...register("passport")}
-                        type="file"
-                        accept=".pdf,.jpg,.jpeg,.png"
-                        className={
-                          errors.passport ? errorInputClass : inputClass
-                        }
-                      />
-                      <FieldError
-                        message={errors.passport?.message as string}
-                      />
-                      <p className="text-[11px] text-[#5F5E5A] mt-2">
-                        Upload photo/scan of passport page.
-                      </p>
-                    </div>
-
-                    <div>
-                      <label className="text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 block font-body">
-                        Recent photo (optional)
-                      </label>
-                      <input
-                        {...register("photo")}
-                        type="file"
-                        accept=".jpg,.jpeg,.png,.pdf"
-                        className={inputClass}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-xs font-semibold text-[#2C2C2A] uppercase tracking-wide mb-2 block font-body">
-                        Certificates (optional)
-                      </label>
-                      <input
-                        {...register("certificates")}
-                        type="file"
-                        multiple
-                        accept=".pdf,.jpg,.jpeg,.png"
-                        className={inputClass}
-                      />
-                    </div>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                    <p className="text-sm font-semibold text-red-800 mb-2 font-body">
+                      📎 Please attach the following documents manually in Gmail
+                      before sending:
+                    </p>
+                    <ul className="space-y-2">
+                      <li className="flex items-start gap-2 text-sm text-blue-700 font-body">
+                        <span className="mt-0.5 text-blue-500">✱</span>
+                        <span>
+                          <strong>CV / Resume</strong> — PDF, DOC, DOCX, or
+                          image
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2 text-sm text-blue-700 font-body">
+                        <span className="mt-0.5 text-blue-500">✱</span>
+                        <span>
+                          <strong>Passport copy</strong> — PDF or image
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2 text-sm text-blue-700 font-body">
+                        <span className="mt-0.5 text-[#B5A992]">○</span>
+                        <span>
+                          <strong>Recent photo</strong> — JPG or PNG (optional)
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2 text-sm text-blue-700 font-body">
+                        <span className="mt-0.5 text-[#B5A992]">○</span>
+                        <span>
+                          <strong>Certificates</strong> — PDF or image
+                          (optional)
+                        </span>
+                      </li>
+                    </ul>
                   </div>
 
-                  <div className="mt-6">
-                    <label className="flex items-start gap-3 cursor-pointer">
-                      <input
-                        {...register("confirmTruth")}
-                        type="checkbox"
-                        className="mt-1.5"
-                      />
-                      <span className="text-sm text-[#5F5E5A] font-body">
-                        I confirm the details and documents provided are correct
-                        and belong to me.
-                      </span>
-                    </label>
-                    <FieldError message={errors.confirmTruth?.message} />
-                  </div>
+                  <p className="text-xs text-[#5F5E5A] font-body">
+                    After clicking <strong>Apply Now</strong>, Gmail will open
+                    with your details pre-filled. Use the{" "}
+                    <strong>📎 attach</strong> button in Gmail to add your
+                    documents before hitting Send.
+                  </p>
                 </div>
 
                 <button
