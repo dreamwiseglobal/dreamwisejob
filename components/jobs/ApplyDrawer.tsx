@@ -323,7 +323,7 @@ export default function ApplyDrawer({
                     <input
                       {...(register("experienceYears"),
                       {
-                        valueAsNumber: true,
+                        valueasnumber: "true",
                       })}
                       type="number"
                       min={0}
