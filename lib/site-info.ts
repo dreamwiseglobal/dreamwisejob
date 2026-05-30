@@ -1,10 +1,10 @@
 export const siteInfo = {
-  name: "PracaPolska",
+  name: "DreamWise",
   tagline: "Your Gateway to Work in Poland",
   description:
     "Connecting skilled workers from around the world with trusted Polish employers. Legal contracts, accommodation support, and a smooth onboarding process.",
   shortDescription: "Poland's leading job platform for international workers.",
-  email: "contact@pracapolska.pl",
+  email: "contact@dreamwise.pl",
   phone: "+48732097929",
   address: "ul. Marszałkowska 84, 00-514 Warsaw, Poland",
   founded: "2019",

@@ -186,7 +186,20 @@ body {
   outline-offset: 2px;
 }
 
-.goog-te-banner-frame {
+.goog-te-banner-frame,
+iframe.skiptranslate,
+.goog-te-spinner-pos,
+.goog-te-ftab-float,
+#goog-gt-tt,
+.goog-tooltip,
+.goog-tooltip-content,
+.goog-text-highlight {
+  display: none !important;
+}
+
+.VIpgJd-yAWNEb-VIpgJd-fmcmS-sn54Q,
+.VIpgJd-yAWNEb-hvhgNd,
+.VIpgJd-ZVi9od-aZ2wEe {
   display: none !important;
 }
 iframe.skiptranslate {
@@ -194,9 +207,4 @@ iframe.skiptranslate {
 }
 body {
   top: 0 !important;
-}
-
-body {
-  top: 0 !important;
-  position: static !important;
 }
