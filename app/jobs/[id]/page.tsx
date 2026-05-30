@@ -29,7 +29,7 @@ export default async function Page({ params }: PageProps) {
   if (!job) notFound();
 
   return (
-    <main className="bg-[#F1EFE8] min-h-screen">
+    <main className="bg-[#F1EFE8] min-h-screen flex flex-col items-center justify-center">
       <div className="max-w-6xl mx-auto px-4 py-10">
         <div className="flex items-center justify-between gap-4 mb-6">
           <Link href="/jobs" className="text-sm text-[#185FA5] hover:underline">

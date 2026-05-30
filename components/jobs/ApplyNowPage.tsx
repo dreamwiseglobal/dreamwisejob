@@ -240,9 +240,9 @@ function Drawer({
     });
 
     if (!res.ok) {
-      const payload = (await res.json().catch(() => null)) as
-        | { error?: string }
-        | null;
+      const payload = (await res.json().catch(() => null)) as {
+        error?: string;
+      } | null;
       setSubmitError(payload?.error ?? "Failed to submit. Please try again.");
       return;
     }
@@ -621,7 +621,7 @@ export default function ApplyNowPage() {
   };
 
   return (
-    <main className="bg-[#F1EFE8]">
+    <main className="bg-[#F1EFE8] min-h-screen flex flex-col items-center justify-center mt-20">
       <section className="py-16 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
