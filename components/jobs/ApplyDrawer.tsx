@@ -113,7 +113,6 @@ export default function ApplyDrawer({
   }, [open]);
 
   const onSubmit = (data: ApplyFormData) => {
-    // Build a list of attached file names so the recruiter knows what to expect
     const cvName = data.cv?.[0]?.name ?? "—";
     const passportName = data.passport?.[0]?.name ?? "—";
     const photoName = data.photo?.[0]?.name ?? "none";
@@ -124,40 +123,35 @@ export default function ApplyDrawer({
             .join(", ")
         : "none";
 
-    const subject = encodeURIComponent(
-      `Job Application – ${job?.title ?? "Open Position"} – ${data.fullName}`,
-    );
+    // ✅ Plain strings — no encodeURIComponent here
+    const subject = `Job Application – ${job?.title ?? "Open Position"} – ${data.fullName}`;
 
-    const body = encodeURIComponent(
-      [
-        `Position applied for: ${job?.title ?? "N/A"}`,
-        `Location: ${job?.location ?? "N/A"}`,
-        "",
-        "── Applicant details ──────────────────────",
-        `Full name:        ${data.fullName}`,
-        `Email:            ${data.email}`,
-        `Phone:            ${data.phone}`,
-        `Country of origin:${data.country}`,
-        `Current city:     ${data.currentCity}`,
-        `Years of experience: ${data.experienceYears}`,
-        "",
-        "── Notes ──────────────────────────────────",
-        data.notes,
-        "",
-        "── Attachments (please attach before sending) ──",
-        `CV / Resume:  ${cvName}`,
-        `Passport:     ${passportName}`,
-        `Photo:        ${photoName}`,
-        `Certificates: ${certNames}`,
-        "",
-        "──────────────────────────────────────────",
-        "This email was pre-filled from the job application form.",
-      ].join("\n"),
-    );
+    const body = [
+      `Position applied for: ${job?.title ?? "N/A"}`,
+      `Location: ${job?.location ?? "N/A"}`,
+      "",
+      "── Applicant details ──────────────────────",
+      `Full name:        ${data.fullName}`,
+      `Email:            ${data.email}`,
+      `Phone:            ${data.phone}`,
+      `Country of origin:${data.country}`,
+      `Current city:     ${data.currentCity}`,
+      `Years of experience: ${data.experienceYears}`,
+      "",
+      "── Notes ──────────────────────────────────",
+      data.notes,
+      "",
+      "── Attachments (please attach before sending) ──",
+      `CV / Resume:  ${cvName}`,
+      `Passport:     ${passportName}`,
+      `Photo:        ${photoName}`,
+      `Certificates: ${certNames}`,
+      "",
+      "──────────────────────────────────────────",
+      "This email was pre-filled from the job application form.",
+    ].join("\n");
 
-    // Open the user's default mail client pre-filled with all details.
-    // Files cannot be attached programmatically via mailto: — the note
-    // above reminds the applicant to attach them manually before sending.
+    // ✅ Encode only once here, inside the URL
     const gmailLink =
       `https://mail.google.com/mail/?view=cm&fs=1` +
       `&to=${encodeURIComponent(siteInfo.contactEmail)}` +
@@ -167,7 +161,6 @@ export default function ApplyDrawer({
     window.open(gmailLink, "_blank");
     setSubmitted(true);
   };
-
   return (
     // FIX: replaced pointer-events-none root with visibility toggle + inert
     // so the close button and overlay are never silently blocked.
@@ -384,7 +377,7 @@ export default function ApplyDrawer({
                   <FieldError message={errors.notes?.message} />
                 </div>
 
-                <div className="mt-8 border-t border-[#E7E5DC] pt-6">
+                {/* <div className="mt-8 border-t border-[#E7E5DC] pt-6">
                   <p className="font-mono text-xs text-[#5F5E5A] uppercase tracking-widest mb-4">
                     Documents
                   </p>
@@ -450,6 +443,54 @@ export default function ApplyDrawer({
                       />
                     </div>
                   </div>
+                </div> */}
+
+                <div className="mt-8 border-t border-[#E7E5DC] pt-6">
+                  <p className="font-mono text-xs text-[#5F5E5A] uppercase tracking-widest mb-4">
+                    Documents
+                  </p>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                    <p className="text-sm font-semibold text-red-800 mb-2 font-body">
+                      📎 Please attach the following documents manually in Gmail
+                      before sending:
+                    </p>
+                    <ul className="space-y-2">
+                      <li className="flex items-start gap-2 text-sm text-blue-700 font-body">
+                        <span className="mt-0.5 text-blue-500">✱</span>
+                        <span>
+                          <strong>CV / Resume</strong> — PDF, DOC, DOCX, or
+                          image
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2 text-sm text-blue-700 font-body">
+                        <span className="mt-0.5 text-blue-500">✱</span>
+                        <span>
+                          <strong>Passport copy</strong> — PDF or image
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2 text-sm text-blue-700 font-body">
+                        <span className="mt-0.5 text-[#B5A992]">○</span>
+                        <span>
+                          <strong>Recent photo</strong> — JPG or PNG (optional)
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2 text-sm text-blue-700 font-body">
+                        <span className="mt-0.5 text-[#B5A992]">○</span>
+                        <span>
+                          <strong>Certificates</strong> — PDF or image
+                          (optional)
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <p className="text-xs text-[#5F5E5A] font-body">
+                    After clicking <strong>Apply Now</strong>, Gmail will open
+                    with your details pre-filled. Use the{" "}
+                    <strong>📎 attach</strong> button in Gmail to add your
+                    documents before hitting Send.
+                  </p>
                 </div>
 
                 <div className="mt-6">
