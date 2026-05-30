@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Briefcase, Mail, Phone, MapPin, ExternalLink } from "lucide-react";
+import { Mail, Phone, MapPin, ExternalLink } from "lucide-react";
+import BrandLogo from "@/components/landing/BrandLogo";
 import { siteInfo } from "@/lib/site-info";
 
 const socialLinks = [
@@ -15,19 +16,14 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 border-b border-white/10">
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-white flex items-center justify-center">
-                <Briefcase className="w-4 h-4 text-[#1A56DB]" />
-              </div>
-              <span className="font-heading font-800 text-2xl tracking-tight">
-                {siteInfo.name}
-              </span>
-            </div>
+            <Link href="/" className="inline-flex mb-5">
+              <BrandLogo className="h-14 w-auto sm:h-16" />
+            </Link>
             <p className="text-white/70 text-sm leading-relaxed max-w-sm mb-6 font-body">
               {siteInfo.shortDescription} Trusted by thousands of workers and
               employers across Europe.
             </p>
-            <div className="flex gap-3">
+            {/* <div className="flex gap-3">
               {socialLinks.map(({ label, href }) => (
                 <a
                   key={label}
@@ -41,7 +37,7 @@ export default function Footer() {
                   {label}
                 </a>
               ))}
-            </div>
+            </div> */}
           </div>
 
           <div>

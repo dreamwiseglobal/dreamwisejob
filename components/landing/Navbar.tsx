@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Briefcase } from "lucide-react";
+import BrandLogo from "@/components/landing/BrandLogo";
+import { Menu, X } from "lucide-react";
 import { siteInfo } from "@/lib/site-info";
 
 function readLangCookie(cookieString: string): "pl" | "en" | null {
@@ -135,15 +136,10 @@ export default function Navbar({
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#1A56DB] ${scrolled ? "shadow-lg" : ""}`}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 bg-white flex items-center justify-center">
-              <Briefcase className="w-4 h-4 text-[#1A56DB]" />
-            </div>
-            <span className="font-heading font-800 text-xl text-white tracking-tight">
-              {siteInfo.name}
-            </span>
+          <Link href="/" className="flex items-center shrink-0">
+            <BrandLogo className="h-12 w-auto sm:h-14 md:h-16" priority />
           </Link>
 
           {/* Desktop Nav */}
