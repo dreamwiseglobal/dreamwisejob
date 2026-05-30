@@ -158,13 +158,13 @@ export default function ApplyDrawer({
     // Open the user's default mail client pre-filled with all details.
     // Files cannot be attached programmatically via mailto: — the note
     // above reminds the applicant to attach them manually before sending.
-    const mailtoLink =
-    `mailto:${siteInfo.contactEmail}` +
-    `?subject=${encodeURIComponent(subject)}` +
-    `&body=${encodeURIComponent(body)}`;
-    
-    /* eslint-disable-next-line react-hooks/immutability */
-    window.location.href = mailtoLink;
+    const gmailLink =
+      `https://mail.google.com/mail/?view=cm&fs=1` +
+      `&to=${encodeURIComponent(siteInfo.contactEmail)}` +
+      `&su=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(body)}`;
+
+    window.open(gmailLink, "_blank");
     setSubmitted(true);
   };
 
