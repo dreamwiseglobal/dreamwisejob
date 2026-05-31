@@ -66,7 +66,7 @@ const faqs = [
     category: "legal",
     question: "What is a work permit and do I need one?",
     answer:
-      "Citizens of EU/EEA countries do not need a work permit — they can work in Poland freely. Citizens of Ukraine, Nepal, India, Pakistan, and most other non-EU countries need a work permit (zezwolenie na pracę). DreamWise and your employer handle the entire permit application — you don't pay for it and you don't need to understand Polish bureaucracy.",
+      "Citizens of EU/EEA countries do not need a work permit — they can work in Poland freely. Citizens of Ukraine, Nepal, India, Pakistan, and most other non-EU countries need a work permit (zezwolenie na pracę). DreamWise and your employer handle the entire permit application.",
   },
   {
     id: 8,

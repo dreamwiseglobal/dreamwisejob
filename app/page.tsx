@@ -7,13 +7,15 @@ import TrustSection from "@/components/landing/TrustSection";
 
 export default function Home() {
   return (
-    <main>
-      <HeroSection />
-      <TrustSection />
-      <JobsSection />
-      <HowItWorksSection />
-      <AboutSection />
-      <TestimonialsSection />
-    </main>
+    <>
+      <main>
+        <HeroSection />
+        <TrustSection />
+        <JobsSection />
+        <HowItWorksSection />
+        <AboutSection />
+        <TestimonialsSection />
+      </main>
+    </>
   );
 }
