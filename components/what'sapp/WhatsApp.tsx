@@ -37,7 +37,7 @@ export default function WhatsAppButton({
                 WhatsApp Us
               </p>
               <p className="text-lg font-bold text-gray-900 tracking-wide">
-                +{phoneNumber}
+                {phoneNumber}
               </p>
             </div>
 
